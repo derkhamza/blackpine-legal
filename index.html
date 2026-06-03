@@ -1,52 +1,1190 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blackpine Cabinet — Politique de Confidentialité</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blackpine Cabinet — Gestion fiscale pour médecins libéraux au Maroc</title>
+  <meta name="description" content="L'application de gestion de cabinet pour médecins libéraux marocains. Calcul IR/CM automatique, suivi recettes et charges, export PDF/Excel, widget, synchronisation cloud.">
+  <meta name="theme-color" content="#0A4E7E">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Blackpine Cabinet">
+  <meta property="og:description" content="Gérez votre cabinet, maîtrisez votre IR. Application pour médecins libéraux au Maroc.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://blackpinecap.com">
+  <!-- Canonical -->
+  <link rel="canonical" href="https://blackpinecap.com">
+
 <style>
-  body { font-family: -apple-system, sans-serif; max-width: 700px; margin: 0 auto; padding: 40px 20px; color: #1A1F1B; line-height: 1.7; }
-  h1 { color: #1F3A2E; font-size: 24px; }
-  h2 { color: #1F3A2E; font-size: 18px; margin-top: 32px; }
-  .meta { color: #888; font-size: 13px; margin-bottom: 32px; }
-  a { color: #1F3A2E; }
+/* ── Variables ─────────────────────────────────────────────────────────── */
+:root {
+  --navy:       #0A4E7E;
+  --navy-mid:   #0C6E9B;
+  --navy-dark:  #072E4E;
+  --blue:       #1890C5;
+  --blue-soft:  #D4EDF9;
+  --bg:         #EFF6FB;
+  --white:      #FFFFFF;
+  --text:       #122B42;
+  --muted:      #4A6C84;
+  --tertiary:   #7B9CB8;
+  --border:     #C8DFF0;
+  --gold:       #D4962A;
+  --gold-soft:  #FBF0DD;
+  --green:      #15A876;
+  --green-soft: #D4F2E8;
+  --coral:      #E85B5B;
+  --coral-soft: #FDEAEA;
+  --r:          14px;
+  --r-lg:       24px;
+  --r-pill:     100px;
+  --shadow-card: 0 2px 16px rgba(18,43,66,0.07), 0 1px 4px rgba(18,43,66,0.04);
+  --shadow-hero: 0 20px 60px rgba(10,78,126,0.30);
+  --trans: 0.22s ease;
+}
+
+/* ── Reset & Base ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* ── Scroll-reveal utility ─────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════════════════════════════════ */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 62px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 800; font-size: 16px; color: var(--navy); letter-spacing: -0.3px;
+}
+.nav-logo-mark {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: var(--navy); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.nav-links { display: flex; gap: 28px; }
+.nav-links a { font-size: 14px; font-weight: 500; color: var(--muted); transition: color var(--trans); }
+.nav-links a:hover { color: var(--navy); }
+.nav-cta {
+  background: var(--blue); color: #fff;
+  padding: 9px 20px; border-radius: var(--r-pill);
+  font-size: 13px; font-weight: 700;
+  transition: background var(--trans), transform var(--trans);
+}
+.nav-cta:hover { background: var(--navy-mid); transform: translateY(-1px); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════════════════════════ */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, #0C3D64 55%, var(--navy-dark) 100%);
+  padding: 80px 0 0;
+  overflow: hidden;
+  position: relative;
+}
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(24,144,197,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  display: flex; align-items: flex-end; gap: 48px;
+  position: relative;
+}
+.hero-copy { flex: 1; padding-bottom: 80px; color: #fff; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.80);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: var(--r-pill);
+  margin-bottom: 22px;
+}
+.hero-title {
+  font-size: clamp(30px, 4.5vw, 52px);
+  font-weight: 900; line-height: 1.08; letter-spacing: -1.5px;
+  margin-bottom: 18px;
+}
+.hero-title .accent { color: var(--gold); }
+.hero-subtitle {
+  font-size: 16px; color: rgba(255,255,255,0.68); max-width: 460px;
+  line-height: 1.75; margin-bottom: 36px;
+}
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn-gold {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--gold); color: #fff;
+  padding: 14px 24px; border-radius: var(--r-pill);
+  font-size: 14px; font-weight: 800;
+  box-shadow: 0 4px 22px rgba(212,150,42,0.38);
+  transition: transform var(--trans), box-shadow var(--trans);
+}
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(212,150,42,0.50); }
+.btn-outline-white {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.10);
+  border: 1.5px solid rgba(255,255,255,0.26);
+  color: rgba(255,255,255,0.85);
+  padding: 13px 24px; border-radius: var(--r-pill);
+  font-size: 14px; font-weight: 600;
+  transition: background var(--trans);
+}
+.btn-outline-white:hover { background: rgba(255,255,255,0.18); }
+.hero-note { margin-top: 14px; font-size: 12px; color: rgba(255,255,255,0.40); }
+
+/* ── Phone mockup ──────────────────────────────────────────────────────── */
+.hero-visual { flex: 0 0 auto; display: flex; justify-content: center; align-items: flex-end; }
+.phone-wrap { position: relative; }
+.phone {
+  width: 240px; height: 490px;
+  background: #131B24;
+  border-radius: 42px;
+  border: 6px solid #2A3848;
+  box-shadow: var(--shadow-hero), inset 0 0 0 1px rgba(255,255,255,0.04);
+  position: relative; overflow: hidden;
+}
+/* Dynamic island */
+.phone::before {
+  content: "";
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  width: 80px; height: 26px;
+  background: #131B24;
+  border-radius: 14px; z-index: 10;
+}
+.phone-screen {
+  position: absolute; inset: 0;
+  background: #EFF6FB;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+/* App status bar */
+.app-status-bar {
+  height: 44px; background: #0A4E7E;
+  flex-shrink: 0;
+}
+/* App header */
+.app-header {
+  background: #FFFFFF;
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid #C8DFF0;
+  flex-shrink: 0;
+}
+.app-header-title { font-size: 15px; font-weight: 800; color: #122B42; letter-spacing: -0.3px; }
+.app-header-sub { font-size: 10px; color: #1890C5; font-weight: 600; margin-top: 1px; }
+/* Year picker */
+.app-year-picker {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; padding: 8px 0 4px;
+  background: #EFF6FB;
+  flex-shrink: 0;
+}
+.app-year-btn { width: 22px; height: 22px; background: #D4EDF9; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.app-year-label { font-size: 16px; font-weight: 800; color: #122B42; letter-spacing: -0.5px; }
+.app-year-sub { font-size: 8px; color: #7B9CB8; margin-top: 1px; text-align: center; }
+/* Hero result card */
+.app-hero-card {
+  margin: 8px 10px 6px;
+  background: #0A4E7E;
+  border-radius: 16px;
+  padding: 12px 14px 0;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.app-result-label { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.50); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.app-result-amount { font-size: 28px; font-weight: 900; color: #FFFFFF; letter-spacing: -1px; line-height: 1; margin-bottom: 4px; }
+.app-result-sub { font-size: 8px; color: rgba(255,255,255,0.35); margin-bottom: 10px; }
+.app-metrics-row {
+  display: flex; border-top: 1px solid rgba(255,255,255,0.10);
+  margin: 0 -14px;
+}
+.app-metric-item {
+  flex: 1; padding: 8px 0; text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.10);
+}
+.app-metric-item:last-child { border-right: none; }
+.app-metric-label { font-size: 7px; font-weight: 600; color: rgba(255,255,255,0.38); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; }
+.app-metric-value { font-size: 10px; font-weight: 700; }
+.c-green { color: #6DEDB5; }
+.c-coral { color: #FF8087; }
+.c-white { color: #FFFFFF; }
+/* Action buttons */
+.app-actions-row {
+  display: flex; gap: 6px; padding: 6px 10px;
+  flex-shrink: 0;
+}
+.app-action-btn {
+  flex: 1; padding: 7px 4px; border-radius: 10px;
+  font-size: 9px; font-weight: 700; text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 3px;
+}
+.app-action-recette { background: #D4F2E8; color: #15A876; }
+.app-action-charge  { background: #FDEAEA; color: #E85B5B; }
+/* Mini chart */
+.app-chart-area {
+  padding: 6px 10px 4px; flex-shrink: 0;
+}
+.app-chart-label { font-size: 7px; font-weight: 700; color: #1890C5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+.app-chart-bars { display: flex; align-items: flex-end; gap: 3px; height: 40px; }
+.bar-group { flex: 1; display: flex; gap: 1px; align-items: flex-end; }
+.bar { border-radius: 2px 2px 0 0; }
+.bar-r { background: #15A876; }
+.bar-c { background: #E85B5B; }
+/* Breakdown card */
+.app-breakdown-card {
+  margin: 4px 10px 0;
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 8px 10px;
+  border: 1px solid #C8DFF0;
+  flex-shrink: 0;
+}
+.app-bd-title { font-size: 7px; font-weight: 700; color: #1890C5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+.app-bd-row { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; }
+.app-bd-label { font-size: 9px; color: #4A6C84; }
+.app-bd-value { font-size: 9px; font-weight: 600; color: #122B42; }
+.app-bd-divider { height: 1px; background: #C8DFF0; margin: 4px 0; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TRUST BAR
+══════════════════════════════════════════════════════════════════════════ */
+.trust-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+.trust-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: stretch;
+}
+.trust-item {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  padding: 18px 20px;
+  border-right: 1px solid var(--border);
+}
+.trust-item:last-child { border-right: none; }
+.trust-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--blue-soft); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.trust-text strong { display: block; font-size: 13px; font-weight: 700; color: var(--text); }
+.trust-text span { font-size: 12px; color: var(--muted); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SECTION CHROME
+══════════════════════════════════════════════════════════════════════════ */
+section { padding: 80px 0; }
+.section-eyebrow {
+  display: inline-block;
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px;
+  color: var(--blue); margin-bottom: 12px;
+}
+.section-title {
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 900; letter-spacing: -1px; line-height: 1.12;
+  color: var(--text); margin-bottom: 14px;
+}
+.section-sub {
+  font-size: 16px; color: var(--muted); max-width: 520px; line-height: 1.7;
+}
+.section-header { text-align: center; margin-bottom: 52px; }
+.section-header .section-sub { margin: 0 auto; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FEATURES
+══════════════════════════════════════════════════════════════════════════ */
+.features { background: var(--white); }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.feature-card {
+  background: var(--bg);
+  border-radius: var(--r-lg);
+  padding: 28px 24px;
+  border: 1px solid var(--border);
+  transition: transform var(--trans), box-shadow var(--trans);
+}
+.feature-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+.feature-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.feature-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.feature-desc { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+/* Highlighted feature card (span 2 cols) */
+.feature-card.wide { grid-column: span 2; }
+.feature-card.dark {
+  background: var(--navy);
+  border-color: transparent;
+  color: #fff;
+}
+.feature-card.dark .feature-title { color: #fff; }
+.feature-card.dark .feature-desc { color: rgba(255,255,255,0.65); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HOW IT WORKS
+══════════════════════════════════════════════════════════════════════════ */
+.how { background: var(--blue-soft); }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.step { text-align: center; }
+.step-num {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--navy); color: #fff;
+  font-size: 20px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+  box-shadow: 0 4px 16px rgba(10,78,126,0.30);
+}
+.step-connector {
+  display: flex; align-items: center; justify-content: center;
+  padding-top: 26px;
+}
+.step-connector svg { color: var(--navy-mid); opacity: 0.4; }
+.steps-row { display: grid; grid-template-columns: 1fr 32px 1fr 32px 1fr; gap: 0; align-items: start; }
+.step-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.step-desc { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PRICING
+══════════════════════════════════════════════════════════════════════════ */
+.pricing { background: var(--white); }
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.plan-card {
+  border-radius: var(--r-lg);
+  padding: 28px 24px;
+  border: 2px solid var(--border);
+  position: relative;
+  transition: transform var(--trans), box-shadow var(--trans);
+}
+.plan-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+.plan-card.featured {
+  border-color: var(--blue);
+  background: linear-gradient(180deg, var(--blue-soft) 0%, var(--white) 60%);
+}
+.plan-badge {
+  position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+  background: var(--blue); color: #fff;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;
+  padding: 3px 12px; border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+.plan-name { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.plan-price { font-size: 36px; font-weight: 900; color: var(--text); letter-spacing: -1px; line-height: 1; }
+.plan-price span { font-size: 14px; font-weight: 500; color: var(--muted); }
+.plan-savings {
+  display: inline-block;
+  background: var(--green-soft); color: var(--green);
+  font-size: 11px; font-weight: 800;
+  padding: 3px 10px; border-radius: var(--r-pill);
+  margin: 6px 0 14px;
+}
+.plan-per { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+.plan-divider { height: 1px; background: var(--border); margin-bottom: 18px; }
+.plan-features { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.plan-features li { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.plan-features li svg { flex-shrink: 0; }
+.plan-cta {
+  display: block; text-align: center; margin-top: 22px;
+  padding: 12px 0; border-radius: var(--r-pill);
+  font-size: 14px; font-weight: 700;
+  transition: transform var(--trans), background var(--trans);
+}
+.plan-cta:hover { transform: translateY(-1px); }
+.plan-cta-primary { background: var(--blue); color: #fff; }
+.plan-cta-primary:hover { background: var(--navy-mid); }
+.plan-cta-outline { border: 2px solid var(--border); color: var(--text); }
+.plan-cta-outline:hover { border-color: var(--blue); color: var(--blue); }
+.plan-cta-dark { background: var(--navy); color: #fff; }
+.plan-cta-dark:hover { background: var(--navy-mid); }
+.pricing-note { text-align: center; margin-top: 28px; font-size: 13px; color: var(--tertiary); }
+
+/* Trial banner */
+.trial-banner {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  border-radius: var(--r-lg);
+  padding: 32px 36px;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+.trial-copy { flex: 1; }
+.trial-copy h3 { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+.trial-copy p { font-size: 14px; color: rgba(255,255,255,0.65); }
+.trial-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gold); color: #fff;
+  padding: 13px 24px; border-radius: var(--r-pill);
+  font-size: 14px; font-weight: 800;
+  box-shadow: 0 4px 16px rgba(212,150,42,0.35);
+  transition: transform var(--trans), box-shadow var(--trans);
+  white-space: nowrap;
+}
+.trial-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,150,42,0.50); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TESTIMONIALS / SOCIAL PROOF
+══════════════════════════════════════════════════════════════════════════ */
+.testimonials { background: var(--bg); }
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.testimonial-card {
+  background: var(--white);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+}
+.testimonial-stars { color: var(--gold); font-size: 14px; margin-bottom: 12px; }
+.testimonial-text { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+.testimonial-author { display: flex; align-items: center; gap: 10px; }
+.author-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--blue-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; color: var(--blue);
+  flex-shrink: 0;
+}
+.author-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.author-role { font-size: 12px; color: var(--tertiary); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SECURITY / TRUST
+══════════════════════════════════════════════════════════════════════════ */
+.security { background: var(--white); }
+.security-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.security-item {
+  text-align: center; padding: 24px 16px;
+  border-radius: var(--r);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.security-icon {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--blue-soft);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+}
+.security-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.security-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CTA SECTION
+══════════════════════════════════════════════════════════════════════════ */
+.cta-section { background: var(--blue-soft); padding: 80px 0; }
+.cta-box {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  border-radius: 28px;
+  padding: 56px 48px;
+  text-align: center;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.cta-box::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(24,144,197,0.18), transparent 70%);
+}
+.cta-box h2 { font-size: clamp(24px, 3vw, 36px); font-weight: 900; letter-spacing: -0.8px; margin-bottom: 12px; position: relative; }
+.cta-box p { font-size: 16px; color: rgba(255,255,255,0.65); margin-bottom: 32px; position: relative; }
+.cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
+.btn-white {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: #fff; color: var(--navy);
+  padding: 14px 26px; border-radius: var(--r-pill);
+  font-size: 14px; font-weight: 800;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transition: transform var(--trans), box-shadow var(--trans);
+}
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.20); }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════════════════════════ */
+footer {
+  background: var(--navy-dark);
+  color: rgba(255,255,255,0.65);
+  padding: 52px 0 32px;
+}
+.footer-top {
+  display: flex; gap: 60px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  margin-bottom: 28px;
+}
+.footer-brand { flex: 0 0 220px; }
+.footer-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 800; font-size: 15px; color: #fff;
+  margin-bottom: 12px;
+}
+.footer-logo-mark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--navy-mid);
+  display: flex; align-items: center; justify-content: center;
+}
+.footer-tagline { font-size: 13px; line-height: 1.7; }
+.footer-cols { display: flex; gap: 48px; flex: 1; }
+.footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #fff; margin-bottom: 14px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer-col ul a { font-size: 13px; transition: color var(--trans); }
+.footer-col ul a:hover { color: #fff; }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px;
+}
+.footer-bottom a { transition: color var(--trans); }
+.footer-bottom a:hover { color: #fff; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .hero-inner { flex-direction: column-reverse; align-items: center; padding-bottom: 48px; }
+  .hero-copy { padding-bottom: 0; text-align: center; }
+  .hero-subtitle { max-width: 100%; }
+  .hero-ctas { justify-content: center; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-card.wide { grid-column: span 2; }
+  .steps-row { grid-template-columns: 1fr; }
+  .step-connector { display: none; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 380px; }
+  .testimonials-grid { grid-template-columns: 1fr 1fr; }
+  .security-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-top { flex-direction: column; }
+  .footer-cols { flex-wrap: wrap; gap: 28px; }
+  .trust-inner { flex-wrap: wrap; }
+  .trust-item { flex: 0 0 50%; }
+}
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  section { padding: 56px 0; }
+  .hero { padding: 56px 0 0; }
+  .features-grid { grid-template-columns: 1fr; }
+  .feature-card.wide { grid-column: span 1; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .security-grid { grid-template-columns: 1fr 1fr; }
+  .cta-box { padding: 36px 24px; }
+  .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+  .trial-banner { flex-direction: column; text-align: center; }
+  .phone { width: 200px; height: 408px; }
+}
 </style>
 </head>
 <body>
-<h1>Politique de Confidentialité</h1>
-<p class="meta">Dernière mise à jour : avril 2026</p>
 
-<h2>1. Responsable du traitement</h2>
-<p>Blackpine Capital Advisory SARL, basée à Oujda, Maroc, est responsable du traitement des données personnelles collectées via l'application Blackpine Cabinet.</p>
+<!-- ══════════════════════════════════════════════════════════════════════
+     NAV
+════════════════════════════════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M4 4h5.5a3.5 3.5 0 0 1 0 7H4V4Z" fill="white" fill-opacity="0.9"/>
+          <path d="M4 11h6a4 4 0 0 1 0 8H4v-8Z" fill="white" fill-opacity="0.6"/>
+        </svg>
+      </div>
+      Blackpine Cabinet
+    </a>
+    <div class="nav-links">
+      <a href="#features">Fonctionnalités</a>
+      <a href="#pricing">Tarifs</a>
+      <a href="privacy.html">Confidentialité</a>
+    </div>
+    <a href="https://play.google.com/store/apps/details?id=com.blackpine.cabinet" class="nav-cta" target="_blank" rel="noopener">
+      Télécharger
+    </a>
+  </div>
+</nav>
 
-<h2>2. Données collectées</h2>
-<p>Nous collectons : adresse email, mot de passe (chiffré), informations fiscales du profil professionnel (spécialité, commune, situation familiale, date de début d'activité), transactions financières (recettes et charges), et photos de justificatifs.</p>
+<!-- ══════════════════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="container hero-inner">
 
-<h2>3. Finalité du traitement</h2>
-<p>Vos données sont utilisées exclusivement pour : le calcul de vos estimations fiscales, la synchronisation entre vos appareils, la génération de rapports fiscaux (PDF/Excel), et l'amélioration de l'application.</p>
+    <div class="hero-copy reveal">
+      <div class="hero-badge">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1l1.2 3.7H11L8.1 6.9l1.1 3.7L6 8.5l-3.2 2.1 1.1-3.7L1 4.7h3.8L6 1z" fill="currentColor"/></svg>
+        Médecins libéraux au Maroc
+      </div>
+      <h1 class="hero-title">
+        Gérez votre cabinet.<br>
+        <span class="accent">Maîtrisez votre IR.</span>
+      </h1>
+      <p class="hero-subtitle">
+        Recettes, charges, amortissements, IR/CM calculé en temps réel —
+        tout ce dont un médecin libéral marocain a besoin, dans une seule application.
+      </p>
+      <div class="hero-ctas">
+        <a href="https://play.google.com/store/apps/details?id=com.blackpine.cabinet" class="btn-gold" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.1c.37.2.82.18 1.2-.05L17 14.9l-3.42-3.42L3.18 23.1zM20.96 10.27a1.6 1.6 0 0 0 0-2.54L18.4 6.27l-3.67 3.67 3.67 3.67 2.56-3.34zM1.05 1.07A1.5 1.5 0 0 0 .5 2.3v19.4a1.5 1.5 0 0 0 .55 1.23l.07.06L11.6 12l-10.48-11zM17 5.1 4.38.95c-.38-.23-.83-.25-1.2-.05l10.38 11.52L17 5.1z"/></svg>
+          Google Play
+        </a>
+        <a href="#features" class="btn-outline-white">
+          Voir les fonctionnalités
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <p class="hero-note">Essai gratuit 30 jours · Sans carte bancaire · Application Android</p>
+    </div>
 
-<h2>4. Base légale</h2>
-<p>Le traitement est fondé sur votre consentement et sur l'exécution du contrat de service. Conformément à la loi marocaine 09-08 relative à la protection des personnes physiques à l'égard du traitement des données à caractère personnel.</p>
+    <!-- Phone mockup -->
+    <div class="hero-visual reveal">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="app-status-bar"></div>
+            <div class="app-header">
+              <div class="app-header-title">Bilan financier</div>
+              <div class="app-header-sub">2026</div>
+            </div>
+            <div class="app-year-picker">
+              <div class="app-year-btn">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M6.5 2L3.5 5l3 3" stroke="#1890C5" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <div>
+                <div class="app-year-label">2026</div>
+                <div class="app-year-sub">Exercice fiscal</div>
+              </div>
+              <div class="app-year-btn">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M3.5 2L6.5 5l-3 3" stroke="#7B9CB8" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+            </div>
+            <div class="app-hero-card">
+              <div class="app-result-label">Résultat net</div>
+              <div class="app-result-amount">312&thinsp;500</div>
+              <div class="app-result-sub">MAD · Bénéfice · RNS</div>
+              <div class="app-metrics-row">
+                <div class="app-metric-item">
+                  <div class="app-metric-label">Recettes</div>
+                  <div class="app-metric-value c-green">460&thinsp;000</div>
+                </div>
+                <div class="app-metric-item">
+                  <div class="app-metric-label">Charges</div>
+                  <div class="app-metric-value c-coral">147&thinsp;500</div>
+                </div>
+                <div class="app-metric-item">
+                  <div class="app-metric-label">IR estimé</div>
+                  <div class="app-metric-value c-white">54&thinsp;200</div>
+                </div>
+              </div>
+            </div>
+            <div class="app-actions-row">
+              <div class="app-action-btn app-action-recette">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v6M2 5h6" stroke="#15A876" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Recette
+              </div>
+              <div class="app-action-btn app-action-charge">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 2v6M2 5h6" stroke="#E85B5B" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Charge
+              </div>
+            </div>
+            <div class="app-chart-area">
+              <div class="app-chart-label">Activité mensuelle · 2026</div>
+              <div class="app-chart-bars">
+                <div class="bar-group"><div class="bar bar-r" style="height:32px;width:6px"></div><div class="bar bar-c" style="height:12px;width:6px"></div></div>
+                <div class="bar-group"><div class="bar bar-r" style="height:28px;width:6px"></div><div class="bar bar-c" style="height:10px;width:6px"></div></div>
+                <div class="bar-group"><div class="bar bar-r" style="height:36px;width:6px"></div><div class="bar bar-c" style="height:14px;width:6px"></div></div>
+                <div class="bar-group"><div class="bar bar-r" style="height:30px;width:6px"></div><div class="bar bar-c" style="height:11px;width:6px"></div></div>
+                <div class="bar-group"><div class="bar bar-r" style="height:40px;width:6px"></div><div class="bar bar-c" style="height:16px;width:6px"></div></div>
+                <div class="bar-group"><div class="bar bar-r" style="height:34px;width:6px"></div><div class="bar bar-c" style="height:12px;width:6px"></div></div>
+              </div>
+            </div>
+            <div class="app-breakdown-card">
+              <div class="app-bd-title">Performance cabinet</div>
+              <div class="app-bd-row"><span class="app-bd-label">Total recettes</span><span class="app-bd-value" style="color:#15A876">460 000 MAD</span></div>
+              <div class="app-bd-row"><span class="app-bd-label">Total charges</span><span class="app-bd-value" style="color:#E85B5B">− 147 500 MAD</span></div>
+              <div class="app-bd-divider"></div>
+              <div class="app-bd-row"><span class="app-bd-label" style="font-weight:700;color:#122B42">Résultat net</span><span class="app-bd-value" style="font-weight:800">312 500 MAD</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<h2>5. Stockage et sécurité</h2>
-<p>Vos données sont stockées sur des serveurs sécurisés. Les mots de passe sont chiffrés avec bcrypt. Les communications sont protégées par HTTPS. Les photos de justificatifs sont stockées localement sur votre appareil.</p>
+  </div>
+</section>
 
-<h2>6. Partage des données</h2>
-<p>Nous ne vendons, ne louons ni ne partageons vos données personnelles avec des tiers, sauf obligation légale.</p>
+<!-- ══════════════════════════════════════════════════════════════════════
+     TRUST BAR
+════════════════════════════════════════════════════════════════════════ -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-item reveal">
+      <div class="trust-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L3 6v5c0 4.1 3 7.9 7 9 4-1.1 7-4.9 7-9V6l-7-4Z" stroke="#1890C5" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 10l2 2 4-4" stroke="#1890C5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="trust-text">
+        <strong>Conforme loi 09-08</strong>
+        <span>Protection des données marocaine</span>
+      </div>
+    </div>
+    <div class="trust-item reveal">
+      <div class="trust-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#1890C5" stroke-width="1.6"/><path d="M10 6v4l3 3" stroke="#1890C5" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
+      <div class="trust-text">
+        <strong>Barèmes 2015–2030</strong>
+        <span>IR/CM officiels intégrés</span>
+      </div>
+    </div>
+    <div class="trust-item reveal">
+      <div class="trust-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="3" stroke="#1890C5" stroke-width="1.6"/><path d="M7 10h6M7 7h4M7 13h3" stroke="#1890C5" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
+      <div class="trust-text">
+        <strong>CNOPS &amp; AMO</strong>
+        <span>Suivi remboursements intégré</span>
+      </div>
+    </div>
+    <div class="trust-item reveal">
+      <div class="trust-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 10a8 8 0 1 0 16 0A8 8 0 0 0 2 10Zm6-2h4M10 8v6" stroke="#1890C5" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
+      <div class="trust-text">
+        <strong>Hors connexion</strong>
+        <span>Données stockées localement</span>
+      </div>
+    </div>
+  </div>
+</div>
 
-<h2>7. Durée de conservation</h2>
-<p>Vos données sont conservées tant que votre compte est actif. Les données comptables sont conservées conformément aux obligations légales marocaines (10 ans). Vous pouvez demander la suppression de votre compte à tout moment.</p>
+<!-- ══════════════════════════════════════════════════════════════════════
+     FEATURES
+════════════════════════════════════════════════════════════════════════ -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Fonctionnalités</span>
+      <h2 class="section-title">Tout ce qu'il faut pour<br>gérer un cabinet libéral</h2>
+      <p class="section-sub">Conçu spécifiquement pour les médecins en exercice libéral au Maroc — pas un outil générique.</p>
+    </div>
 
-<h2>8. Vos droits</h2>
-<p>Conformément à la loi 09-08, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez-nous à : <a href="mailto:contact@blackpinecap.com">contact@blackpinecap.com</a></p>
+    <div class="features-grid">
 
-<h2>9. Cookies</h2>
-<p>L'application mobile n'utilise pas de cookies. Les données de session sont stockées localement sur votre appareil.</p>
+      <!-- Feature 1 — Calcul fiscal (wide dark) -->
+      <div class="feature-card dark wide reveal">
+        <div class="feature-icon" style="background:rgba(24,144,197,0.20)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#1890C5" stroke-width="2"/><path d="M8 12h8M8 8h4M8 16h6" stroke="#1890C5" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="feature-title">Calcul IR &amp; CM automatique</div>
+        <div class="feature-desc">Barèmes officiels 2015–2030 intégrés. Régime RNS ou RNR détecté automatiquement. Cotisation minimale, réintégrations fiscales, déductions familiales — tout est calculé en temps réel, à chaque saisie.</div>
+      </div>
 
-<h2>10. Modifications</h2>
-<p>Nous nous réservons le droit de modifier cette politique. Toute modification sera notifiée via l'application.</p>
+      <!-- Feature 2 — Recettes & Charges -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:var(--green-soft)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 12l5 5L21 7" stroke="#15A876" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="feature-title">Recettes &amp; Charges</div>
+        <div class="feature-desc">Catégorisation fine, taux de déductibilité (100 %, 60 % carburant…), aperçu mensuel. Importez vos justificatifs par photo avec l'OCR intégré.</div>
+      </div>
 
-<h2>Contact</h2>
-<p>Blackpine Capital Advisory<br>Oujda, Maroc<br><a href="mailto:contact@blackpinecap.com">contact@blackpinecap.com</a></p>
+      <!-- Feature 3 — Amortissement -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:var(--gold-soft)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M2 17L8 11l4 4 6-8" stroke="#D4962A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="6" r="2" fill="#D4962A"/></svg>
+        </div>
+        <div class="feature-title">Amortissements</div>
+        <div class="feature-desc">Tableau d'amortissement linéaire avec prorata temporis. Les dotations sont déduites automatiquement du résultat fiscal. Gérez équipements médicaux, matériel informatique, agencements.</div>
+      </div>
+
+      <!-- Feature 4 — Charges récurrentes -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:var(--blue-soft)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0 1 16 0" stroke="#1890C5" stroke-width="2" stroke-linecap="round"/><path d="M20 12a8 8 0 0 1-16 0" stroke="#1890C5" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3"/><path d="M17 9l3 3-3 3" stroke="#1890C5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="feature-title">Charges récurrentes</div>
+        <div class="feature-desc">Programmez vos charges mensuelles ou trimestrielles (loyer, salaires, assurances) une seule fois — elles apparaissent automatiquement chaque mois.</div>
+      </div>
+
+      <!-- Feature 5 — Export -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:#EDE9FE">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M9 13h6M9 17h4" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="feature-title">Export PDF &amp; Excel</div>
+        <div class="feature-desc">Relevé fiscal annuel en PDF, tableur Excel complet — prêts à transmettre à votre comptable ou à l'administration fiscale.</div>
+      </div>
+
+      <!-- Feature 6 — CNOPS & Widget -->
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:var(--coral-soft)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="#E85B5B" stroke-width="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="#E85B5B" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="feature-title">Sécurité &amp; widget</div>
+        <div class="feature-desc">Verrouillage biométrique (Face ID / empreinte), synchronisation cloud chiffrée, widget d'accueil Android pour vos KPIs en un coup d'œil.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════════════════════════════════ -->
+<section class="how">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Comment ça marche</span>
+      <h2 class="section-title">Opérationnel en 5 minutes</h2>
+      <p class="section-sub">Pas de formation requise. Pas de comptable nécessaire pour démarrer.</p>
+    </div>
+
+    <div class="steps-row">
+
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3 class="step-title">Configurez votre profil</h3>
+        <p class="step-desc">Spécialité, commune, régime matrimonial, charges de famille, date de début d'activité. Une seule fois, et vous avez des calculs personnalisés.</p>
+      </div>
+
+      <div class="step-connector">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#0A4E7E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <h3 class="step-title">Saisissez vos opérations</h3>
+        <p class="step-desc">Recettes de consultations, loyer cabinet, fournitures, salaires du personnel — manuellement ou par photo de justificatif via l'OCR intégré.</p>
+      </div>
+
+      <div class="step-connector">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#0A4E7E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <h3 class="step-title">Consultez votre bilan</h3>
+        <p class="step-desc">Résultat net, IR estimé, cotisation minimale — calculés instantanément. Comparez les années, identifiez les postes de charge, exportez pour votre comptable.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     TESTIMONIALS
+════════════════════════════════════════════════════════════════════════ -->
+<section class="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Ce qu'en disent les médecins</span>
+      <h2 class="section-title">Utilisé par des médecins<br>dans tout le Maroc</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">« Enfin une application qui comprend les spécificités fiscales des médecins marocains. J'évite de longues consultations chez le comptable juste pour une estimation. »</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">M</div>
+          <div>
+            <div class="author-name">Dr. Mohammed A.</div>
+            <div class="author-role">Médecin généraliste · Casablanca</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">« Le suivi CNOPS intégré est une vraie valeur ajoutée. Je vois en un coup d'œil mes dossiers en attente et les remboursements reçus. »</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">F</div>
+          <div>
+            <div class="author-name">Dr. Fatima Z.</div>
+            <div class="author-role">Pédiatre · Rabat</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">« L'export Excel m'a sauvé la mise en fin d'année. Mon comptable reçoit un fichier complet, structuré — il ne doit plus compiler mes relevés manuellement. »</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">Y</div>
+          <div>
+            <div class="author-name">Dr. Youssef B.</div>
+            <div class="author-role">Chirurgien · Fès</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     PRICING
+════════════════════════════════════════════════════════════════════════ -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Tarifs</span>
+      <h2 class="section-title">Simple et transparent</h2>
+      <p class="section-sub">30 jours d'essai gratuit inclus. Pas de carte bancaire requise pour commencer.</p>
+    </div>
+
+    <!-- Trial banner -->
+    <div class="trial-banner reveal">
+      <div class="trial-copy">
+        <h3>30 jours d'essai gratuit — toutes fonctionnalités incluses</h3>
+        <p>Pas de carte bancaire. Pas d'engagement. Annulation à tout moment.</p>
+      </div>
+      <a href="https://play.google.com/store/apps/details?id=com.blackpine.cabinet" class="trial-cta" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.1c.37.2.82.18 1.2-.05L17 14.9l-3.42-3.42L3.18 23.1zM20.96 10.27a1.6 1.6 0 0 0 0-2.54L18.4 6.27l-3.67 3.67 3.67 3.67 2.56-3.34zM1.05 1.07A1.5 1.5 0 0 0 .5 2.3v19.4a1.5 1.5 0 0 0 .55 1.23l.07.06L11.6 12l-10.48-11zM17 5.1 4.38.95c-.38-.23-.83-.25-1.2-.05l10.38 11.52L17 5.1z"/></svg>
+        Commencer gratuitement
+      </a>
+    </div>
+
+    <div class="pricing-grid reveal">
+
+      <!-- Monthly -->
+      <div class="plan-card">
+        <div class="plan-name">Mensuel</div>
+        <div class="plan-price">49 <span>MAD</span></div>
+        <div class="plan-per">par mois · résiliable à tout moment</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Calcul IR/CM illimité
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Recettes &amp; charges illimitées
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Export PDF &amp; Excel
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Synchronisation cloud
+          </li>
+        </ul>
+        <a href="https://play.google.com/store/apps/details?id=com.blackpine.cabinet" class="plan-cta plan-cta-outline" target="_blank" rel="noopener">
+          Commencer l'essai
+        </a>
+      </div>
+
+      <!-- Yearly (featured) -->
+      <div class="plan-card featured">
+        <div class="plan-badge">Meilleure valeur</div>
+        <div class="plan-name">Annuel</div>
+        <div class="plan-price">399 <span>MAD</span></div>
+        <div class="plan-savings">Économisez 32 %</div>
+        <div class="plan-per">soit ~33 MAD/mois · facturé annuellement</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tout du plan mensuel
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            OCR justificatifs prioritaire
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Amortissements illimités
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Widget &amp; mode secrétaire
+          </li>
+        </ul>
+        <a href="https://play.google.com/store/apps/details?id=com.blackpine.cabinet" class="plan-cta plan-cta-primary" target="_blank" rel="noopener">
+          Commencer l'essai
+        </a>
+      </div>
+
+      <!-- Lifetime -->
+      <div class="plan-card">
+        <div class="plan-name">À vie</div>
+        <div class="plan-price">999 <span>MAD</span></div>
+        <div class="plan-per">paiement unique · mises à jour incluses</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tout du plan annuel
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Toutes futures mises à jour
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Aucun abonnement récurrent
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#15A876" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Code d'activation partageable
+          </li>
+        </ul>
+        <a href="mailto:contact@blackpinecap.com?subject=Licence%20à%20vie" class="plan-cta plan-cta-dark">
+          Contacter pour activer
+        </a>
+      </div>
+
+    </div>
+    <p class="pricing-note">Tous les plans incluent 30 jours d'essai gratuit. Pas de carte bancaire requise au démarrage.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SECURITY
+════════════════════════════════════════════════════════════════════════ -->
+<section class="security">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Sécurité &amp; Conformité</span>
+      <h2 class="section-title">Vos données vous appartiennent</h2>
+      <p class="section-sub">Données médicales et financières traitées avec le niveau de sécurité qu'elles méritent.</p>
+    </div>
+    <div class="security-grid">
+      <div class="security-item reveal">
+        <div class="security-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v7c0 5.1 3.6 9.9 8 11 4.4-1.1 8-5.9 8-11V6l-8-4Z" stroke="#1890C5" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="security-title">Chiffrement HTTPS</div>
+        <div class="security-desc">Toutes les communications entre l'app et nos serveurs sont chiffrées.</div>
+      </div>
+      <div class="security-item reveal">
+        <div class="security-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M21 2H3v7c0 7.4 4.9 13.4 9 15 4.1-1.6 9-7.6 9-15V2Z" stroke="#1890C5" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#1890C5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="security-title">Biométrie</div>
+        <div class="security-desc">Accès protégé par Face ID ou empreinte digitale sur appareils compatibles.</div>
+      </div>
+      <div class="security-item reveal">
+        <div class="security-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#1890C5" stroke-width="2"/><path d="M12 8v4l3 3" stroke="#1890C5" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="security-title">Hors connexion</div>
+        <div class="security-desc">L'app fonctionne entièrement hors ligne — vos données ne quittent pas votre appareil sans votre consentement.</div>
+      </div>
+      <div class="security-item reveal">
+        <div class="security-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="8" width="18" height="13" rx="2" stroke="#1890C5" stroke-width="2"/><path d="M8 8V6a4 4 0 1 1 8 0v2" stroke="#1890C5" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="security-title">Loi 09-08</div>
+        <div class="security-desc">Conforme à la loi marocaine sur la protection des données personnelles.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     FINAL CTA
+════════════════════════════════════════════════════════════════════════ -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <h2>Commencez votre essai gratuit</h2>
+      <p>30 jours · Toutes fonctionnalités · Sans carte bancaire</p>
+      <div class="cta-buttons">
+        <a href="https://play.google.com/store/apps/details?id=com.blackpine.cabinet" class="btn-white" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#0A4E7E"><path d="M3.18 23.1c.37.2.82.18 1.2-.05L17 14.9l-3.42-3.42L3.18 23.1zM20.96 10.27a1.6 1.6 0 0 0 0-2.54L18.4 6.27l-3.67 3.67 3.67 3.67 2.56-3.34zM1.05 1.07A1.5 1.5 0 0 0 .5 2.3v19.4a1.5 1.5 0 0 0 .55 1.23l.07.06L11.6 12l-10.48-11zM17 5.1 4.38.95c-.38-.23-.83-.25-1.2-.05l10.38 11.52L17 5.1z"/></svg>
+          Télécharger sur Google Play
+        </a>
+      </div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:18px;position:relative;">
+        Application Android · iOS bientôt disponible
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-mark">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 4h5.5a3.5 3.5 0 0 1 0 7H4V4Z" fill="white" fill-opacity="0.9"/><path d="M4 11h6a4 4 0 0 1 0 8H4v-8Z" fill="white" fill-opacity="0.6"/></svg>
+          </div>
+          Blackpine Cabinet
+        </div>
+        <p class="footer-tagline">Gestion financière et fiscale pour médecins libéraux au Maroc.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Application</h4>
+          <ul>
+            <li><a href="#features">Fonctionnalités</a></li>
+            <li><a href="#pricing">Tarifs</a></li>
+            <li><a href="https://play.google.com/store/apps/details?id=com.blackpine.cabinet" target="_blank" rel="noopener">Google Play</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Légal</h4>
+          <ul>
+            <li><a href="privacy.html">Politique de confidentialité</a></li>
+            <li><a href="terms.html">Conditions d'utilisation</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:contact@blackpinecap.com">contact@blackpinecap.com</a></li>
+            <li><a href="#">Oujda, Maroc</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Blackpine Capital Advisory SARL · Tous droits réservés</span>
+      <span><a href="privacy.html">Confidentialité</a> · <a href="terms.html">CGU</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll-reveal
+const observer = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } }),
+  { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+);
+document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+</script>
+
 </body>
 </html>
